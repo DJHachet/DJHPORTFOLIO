@@ -492,16 +492,8 @@ footer{
       if(!rows.length){ document.getElementById('waitlist-table').innerHTML = '<p style="font-family:DM Mono,monospace;font-size:11px;color:#333;padding:20px 0;">No data found.</p>'; return; }
 
       // Find where March 2026 starts
-      // Find the LAST occurrence of a month header to show most recent first
-      let startRow = 0;
-      for(let i = 0; i < rows.length; i++){
-        const fullRow = rows[i].join(' ').toLowerCase();
-        if(fullRow.includes('march 2026') || fullRow.includes('apr') || fullRow.includes('may') || fullRow.includes('jun')){
-          startRow = i;
-          break;
-        }
-      }
-      if(startRow === 0) startRow = Math.max(0, rows.length - 30);
+      // Hardcode start from row 153 (March 2026 header) — update this number when adding new months
+      let startRow = 153;
 
       let tableHtml = '<table class="wl-table">';
       for(let i = startRow; i < rows.length; i++){
