@@ -497,7 +497,7 @@ footer{
       for(let i = 0; i < rows.length; i++){
         const text = ((rows[i][0]||'')+(rows[i][1]||'')+(rows[i][2]||'')).toLowerCase();
         if(text.includes('march 2026') || text.includes('mar 2026')){
-          startRow = Math.max(0, i - 1);
+          startRow = i;
           break;
         }
       }
