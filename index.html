@@ -492,15 +492,16 @@ footer{
       if(!rows.length){ document.getElementById('waitlist-table').innerHTML = '<p style="font-family:DM Mono,monospace;font-size:11px;color:#333;padding:20px 0;">No data found.</p>'; return; }
 
       // Find where March 2026 starts
-      let startRow = -1;
+      // Find the LAST occurrence of a month header to show most recent first
+      let startRow = 0;
       for(let i = 0; i < rows.length; i++){
         const fullRow = rows[i].join(' ').toLowerCase();
-        if(fullRow.includes('march 2026')){
+        if(fullRow.includes('march 2026') || fullRow.includes('apr') || fullRow.includes('may') || fullRow.includes('jun')){
           startRow = i;
           break;
         }
       }
-      if(startRow === -1) startRow = rows.length - 20;
+      if(startRow === 0) startRow = Math.max(0, rows.length - 30);
 
       let tableHtml = '<table class="wl-table">';
       for(let i = startRow; i < rows.length; i++){
@@ -522,10 +523,10 @@ footer{
         }
 
         let cls = 'wl-scheduled';
-        if(allText.includes('done')||allText.includes('finish')) cls = 'wl-done';
-        else if(allText.includes('cancel')) cls = 'wl-cancelled';
-        else if(allText.includes('editing')) cls = 'wl-editing';
+        if(allText.includes('cancel')) cls = 'wl-cancelled';
         else if(allText.includes('schedul')) cls = 'wl-scheduled';
+        else if(allText.includes('editing')) cls = 'wl-editing';
+        else if(allText.includes('done')||allText.includes('finish')) cls = 'wl-done';
 
         tableHtml += `<tr class="${cls}"><td>${c0}</td><td>${c1}</td><td>${c2}</td><td>${c3}</td><td>${c4}</td><td>${c5}</td></tr>`;
       }
