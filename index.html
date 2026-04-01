@@ -492,14 +492,15 @@ footer{
       if(!rows.length){ document.getElementById('waitlist-table').innerHTML = '<p style="font-family:DM Mono,monospace;font-size:11px;color:#333;padding:20px 0;">No data found.</p>'; return; }
 
       // Find where March 2026 starts
-      let startRow = 0;
+      let startRow = -1;
       for(let i = 0; i < rows.length; i++){
-        const text = ((rows[i][0]||'')+(rows[i][1]||'')+(rows[i][2]||'')).toLowerCase();
-        if(text.includes('march 2026') || text.includes('mar 2026')){
+        const fullRow = rows[i].join(' ').toLowerCase();
+        if(fullRow.includes('march 2026')){
           startRow = i;
           break;
         }
       }
+      if(startRow === -1) startRow = rows.length - 20;
 
       let tableHtml = '<table class="wl-table">';
       for(let i = startRow; i < rows.length; i++){
