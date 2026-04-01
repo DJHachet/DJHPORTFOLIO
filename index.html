@@ -375,8 +375,8 @@ footer{
       <span class="link-handle">@DJH_VRC</span>
       <span class="link-desc">VRChat content · Instagram</span>
     </a>
-    <a href="https://instagram.com/DJH_PROD" target="_blank" class="link-item">
-      <span class="link-handle">@DJH_PROD</span>
+    <a href="https://www.instagram.com/djh.vsul/" target="_blank" class="link-item">
+      <span class="link-handle">@djh.vsul</span>
       <span class="link-desc">Car edits · Instagram</span>
     </a>
     <a href="https://www.youtube.com/@DJH_PROD" target="_blank" class="link-item" style="grid-column:1/-1;">
@@ -521,9 +521,9 @@ footer{
         const anyStatus = s2+s3+s4;
         let cls = 'wl-current';
         if(anyStatus.includes('cancel')) cls = 'wl-cancelled';
-        else if(anyStatus.includes('done')||anyStatus.includes('finish')||c1.toLowerCase().includes('finish')) cls = 'wl-done';
-        else if(anyStatus.includes('editing')) cls = 'wl-editing';
-        else if(anyStatus.includes('schedul')) cls = 'wl-scheduled';
+        else if(s2.includes('schedul')) cls = 'wl-scheduled';
+        else if(s2.includes('editing')) cls = 'wl-editing';
+        else if(s2.includes('done')||s2.includes('finish')||c1.toLowerCase().includes('finish')) cls = 'wl-done';
 
         tableHtml += `<tr class="${cls}"><td>${c0}</td><td>${c1}</td><td>${c2}</td><td>${c3}</td><td>${c4}</td><td>${c5}</td></tr>`;
       }
