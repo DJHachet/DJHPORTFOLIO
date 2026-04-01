@@ -514,11 +514,13 @@ footer{
           continue;
         }
 
+        // Check status column (c2) specifically for colour
+        const status = c2.toLowerCase();
         let cls = 'wl-scheduled';
-        if(allText.includes('cancel')) cls = 'wl-cancelled';
-        else if(allText.includes('schedul')) cls = 'wl-scheduled';
-        else if(allText.includes('editing')) cls = 'wl-editing';
-        else if(allText.includes('done')||allText.includes('finish')) cls = 'wl-done';
+        if(status.includes('cancel')) cls = 'wl-cancelled';
+        else if(status.includes('done')||status.includes('finish')||c0.toLowerCase().includes('finish')) cls = 'wl-done';
+        else if(status.includes('editing')) cls = 'wl-editing';
+        else if(status.includes('schedul')) cls = 'wl-scheduled';
 
         tableHtml += `<tr class="${cls}"><td>${c0}</td><td>${c1}</td><td>${c2}</td><td>${c3}</td><td>${c4}</td><td>${c5}</td></tr>`;
       }
