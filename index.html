@@ -459,7 +459,7 @@ footer{
     <div class="div"></div>
     <p class="body-text" style="font-size:13px;margin-bottom:24px;">Updates automatically when I add or complete commissions. <a href="https://docs.google.com/spreadsheets/d/1BrkgoCxIabSAmEzJR9KzyY_QM1YCCauDINDHQ6S2ti8" target="_blank" style="color:#888;text-decoration:underline;">Open full sheet ↗</a></p>
   </div>
-  <div style="width:100%;overflow-x:auto;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a;">
+  <div style="width:100%;overflow-x:auto;border:1px solid #2a2a2a;margin:0 40px;width:calc(100% - 80px);">
     <div id="waitlist-table" style="min-width:900px;padding:0 40px;">
       <p style="font-family:'DM Mono',monospace;font-size:11px;color:#333;padding:20px 0;">Loading...</p>
     </div>
@@ -492,19 +492,17 @@ footer{
       const rows = data.values || [];
       if(!rows.length){ document.getElementById('waitlist-table').innerHTML = '<p style="font-family:DM Mono,monospace;font-size:11px;color:#333;padding:20px 0;">No data found.</p>'; return; }
 
-      // Find where 2026 data starts — look for rows with year headers or recent dates
+      // Find where March 2026 starts
       let startRow = 0;
-      for(let i = rows.length - 1; i >= 0; i--){
-        const row = rows[i];
-        const text = (row[0] || '') + (row[1] || '') + (row[2] || '');
-        if(text.includes('2026') || text.includes('2025')){
-          // go back a bit to catch the section header
-          startRow = Math.max(0, i - 20);
+      for(let i = 0; i < rows.length; i++){
+        const text = ((rows[i][0]||'')+(rows[i][1]||'')+(rows[i][2]||'')).toLowerCase();
+        if(text.includes('march 2026') || text.includes('mar 2026')){
+          startRow = Math.max(0, i - 1);
           break;
         }
       }
 
-      let html = '<table class="wl-table">';
+      let tableHtml = '<table class="wl-table">';
       for(let i = startRow; i < rows.length; i++){
         const row = rows[i];
         const c0 = (row[0]||'').trim();
@@ -515,30 +513,30 @@ footer{
         const c5 = (row[5]||'').trim();
         const allText = (c0+c1+c2+c3+c4+c5).toLowerCase();
 
-        // Skip completely empty rows
         if(!allText) continue;
 
-        // Month/year header rows
-        if(c0==='' && c1==='' && (c2.includes('2026')||c2.includes('2025')||c2.includes('2024')||c0.includes('202'))){
-          html += `<tr class="wl-month"><td colspan="6">${c2||c0}</td></tr>`;
-          continue;
-        }
-        if((c0.includes('202')||c2.includes('202')) && row.length <= 2){
-          html += `<tr class="wl-month"><td colspan="6">${c0}${c2}</td></tr>`;
+        // Month header rows — contain "2026" and span full width
+        if(allText.includes('available slot') || (allText.includes('202') && !c1 && !c2)){
+          tableHtml += `<tr class="wl-month"><td colspan="6">${c0||c2}</td></tr>`;
           continue;
         }
 
-        // Determine row status for colouring
         let cls = 'wl-scheduled';
         if(allText.includes('done')||allText.includes('finish')) cls = 'wl-done';
         else if(allText.includes('cancel')) cls = 'wl-cancelled';
         else if(allText.includes('editing')) cls = 'wl-editing';
         else if(allText.includes('schedul')) cls = 'wl-scheduled';
 
-        html += `<tr class="${cls}"><td>${c0}</td><td>${c1}</td><td>${c2}</td><td>${c3}</td><td>${c4}</td><td>${c5}</td></tr>`;
+        tableHtml += `<tr class="${cls}"><td>${c0}</td><td>${c1}</td><td>${c2}</td><td>${c3}</td><td>${c4}</td><td>${c5}</td></tr>`;
       }
-      html += '</table>';
-      document.getElementById('waitlist-table').innerHTML = html;
+
+      // Add 5 empty placeholder rows for upcoming slots
+      for(let i = 0; i < 5; i++){
+        tableHtml += `<tr class="wl-scheduled"><td style="color:#222;">—</td><td></td><td></td><td></td><td></td><td></td></tr>`;
+      }
+
+      tableHtml += '</table>';
+      document.getElementById('waitlist-table').innerHTML = tableHtml;
     })
     .catch(e => {
       document.getElementById('waitlist-table').innerHTML = '<p style="font-family:DM Mono,monospace;font-size:11px;color:#333;padding:20px 0;">Could not load waitlist. <a href="https://docs.google.com/spreadsheets/d/1BrkgoCxIabSAmEzJR9KzyY_QM1YCCauDINDHQ6S2ti8" target="_blank" style="color:#555;">Open directly ↗</a></p>';
