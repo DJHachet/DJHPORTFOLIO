@@ -252,6 +252,26 @@ footer{
   .contact-grid{grid-template-columns:1fr;}
   .price-row{flex-direction:column;gap:4px;}
 }
+
+.faq-list{display:flex;flex-direction:column;gap:0;}
+.faq-item{border-bottom:1px solid var(--dimmer);}
+.faq-q{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 0;cursor:pointer;
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;
+  color:#777;text-transform:uppercase;
+  transition:color 0.2s;user-select:none;
+}
+.faq-q:hover{color:#aaa;}
+.faq-arrow{font-size:18px;color:#333;transition:transform 0.2s;flex-shrink:0;margin-left:16px;}
+.faq-item.open .faq-arrow{transform:rotate(45deg);color:#666;}
+.faq-a{
+  font-size:14px;color:var(--mid);line-height:1.85;
+  font-family:'DM Sans',sans-serif;font-weight:300;
+  max-height:0;overflow:hidden;transition:max-height 0.3s ease, padding 0.3s ease;
+  padding:0;
+}
+.faq-item.open .faq-a{max-height:300px;padding-bottom:20px;}
 </style>
 </head>
 <body>
@@ -299,31 +319,56 @@ footer{
 <section id="faq">
   <div class="section-header">FAQ</div>
   <div class="div"></div>
-  <div class="contact-grid">
+  <div class="faq-list">
 
-    <div class="contact-item" style="grid-column:1/-1;">
-      <div class="contact-platform">Why the deposit?</div>
-      <div class="contact-handle" style="font-size:13px;color:var(--mid);line-height:1.7;margin-top:6px;font-family:'DM Sans',sans-serif;font-weight:300;">I only take 5 slots a month and they go quick. The deposit locks yours in and makes sure we're both actually committed before we start. Without it the slot stays open and someone else can take it.</div>
+    <div class="faq-item">
+      <div class="faq-q">Why the deposit?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">I only take 5 slots a month and they go quick. The deposit locks yours in and makes sure we're both actually committed before we start. Without it the slot stays open and someone else can take it.</div>
     </div>
 
-    <div class="contact-item" style="grid-column:1/-1;">
-      <div class="contact-platform">Rush fees?</div>
-      <div class="contact-handle" style="font-size:13px;color:var(--mid);line-height:1.7;margin-top:6px;font-family:'DM Sans',sans-serif;font-weight:300;">Nah I don't do rush work. Rushing it would just feel half-arsed and that's not something I want to send out. I want to be able to watch it back and actually think it's good.</div>
+    <div class="faq-item">
+      <div class="faq-q">Rush fees?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">Nah I don't do rush work. Rushing it would just feel half-arsed and that's not something I want to send out. I want to be able to watch it back and actually think it's good.</div>
     </div>
 
-    <div class="contact-item" style="grid-column:1/-1;">
-      <div class="contact-platform">Can you help find posers/dancers?</div>
-      <div class="contact-handle" style="font-size:13px;color:var(--mid);line-height:1.7;margin-top:6px;font-family:'DM Sans',sans-serif;font-weight:300;">I can try help you find some if you need, just lmk in advance and I'll see who I know. Can't always guarantee it tho.</div>
+    <div class="faq-item">
+      <div class="faq-q">Can you help find posers/dancers?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">I can try help you find some if you need, just lmk in advance and I'll see who I know. Can't always guarantee it tho. Recording itself is handled by me.</div>
     </div>
 
-    <div class="contact-item" style="grid-column:1/-1;">
-      <div class="contact-platform">Why does it take 7–13 days?</div>
-      <div class="contact-handle" style="font-size:13px;color:var(--mid);line-height:1.7;margin-top:6px;font-family:'DM Sans',sans-serif;font-weight:300;">Every showcase gets its own treatment, different scenes, different 3D, different energy to the one before it. I'm not recycling the same setup with a different name on it. Also depends on what other showcases are on before yours, rough estimate is around 7-8 days depending on that.</div>
+    <div class="faq-item">
+      <div class="faq-q">Why does it take 7–13 days?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">Every showcase gets its own treatment, different scenes, different 3D, different energy to the one before it. I'm not recycling the same setup with a different name on it. Also depends on what other showcases are on before yours, rough estimate is around 7-8 days depending on that.</div>
     </div>
 
-    <div class="contact-item" style="grid-column:1/-1;">
-      <div class="contact-platform">Can I change the song after editing has started?</div>
-      <div class="contact-handle" style="font-size:13px;color:var(--mid);line-height:1.7;margin-top:6px;font-family:'DM Sans',sans-serif;font-weight:300;">Yh once we've started on a song that's locked in so just make sure you're happy with it before we begin, not something I can redo once editing's started.</div>
+    <div class="faq-item">
+      <div class="faq-q">Can I change the song after editing has started?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">Yh once we've started on a song that's locked in so just make sure you're happy with it before we begin, not something I can redo once editing's started.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can you do the theme for cinematic?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">Yes and no — if you give me 0 input I'm not gonna know what to do. There has to be a lil something from you to guide me. I've got 5 showcases to do and they all need to be different, I can't just pull ideas for all of them or they start feeling the same.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Do I have to pay a 2nd deposit if I pick 1:30 instead of 1:00?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">No — your deposit is your deposit. If you decide on a longer edit after recording you just stick with the 50% you already paid. If you paid the full amount upfront that covers it too.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Will you record more footage if I want cinematic?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">Yh — but if someone also recorded the day before and you want to go back for more, it's gonna be worked on at the same time and will push back when you get your showcase.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What's usually your best time to record?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">5–7PM EST is usually the best window.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I release my avi first then pay?<span class="faq-arrow">+</span></div>
+      <div class="faq-a">This depends on how well I know you. It's not my preferred way but sometimes things come up where someone can't pay on time — I get that. The more we've worked together the more I know how you move, and options like this become available. But if that trust gets taken advantage of — no showcase, no more slots, even if you say you'll pay £200.</div>
     </div>
 
   </div>
@@ -600,7 +645,7 @@ footer{
     <div style="padding:24px 20px;border:1px solid var(--dimmer);">
       <div style="font-family:'Bebas Neue',sans-serif;font-size:72px;color:var(--dimmer);line-height:1;margin-bottom:8px;">02</div>
       <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:var(--dim);margin-bottom:8px;">PREP &amp; FILMING</div>
-      <div style="font-size:13px;color:var(--mid);line-height:1.7;">You sort your cast and footage. I handle everything after — direction, timing, the full edit.</div>
+      <div style="font-size:13px;color:var(--mid);line-height:1.7;">Recording is handled by me — direction, timing, the full edit. If you need posers/dancers I can try help you find some, just lmk in advance and I'll see who I know. Can't always guarantee it tho.</div>
     </div>
 
     <div style="padding:24px 20px;border:1px solid var(--dimmer);">
@@ -728,5 +773,16 @@ footer{
     loading="lazy"
   ></iframe>
 </div>
+
+<script>
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if(!isOpen) item.classList.add('open');
+  });
+});
+</script>
 </body>
 </html>
