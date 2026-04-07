@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNX Tools — Coming Soon</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#090909;--white:#f0f0f0;--mid:#666;--dim:#3a3a3a;--dimmer:#1e1e1e;--ghost:#141414;--div:#161616;
+  --t-bg:#111;--t-surface:#181818;--t-border:#252525;--t-text:#ccc;--t-mid:#555;--t-hi:#e8c84a;--t-btn:#1a1a1a;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:0.35;}
+nav{position:fixed;top:0;left:0;right:0;padding:24px 40px;display:flex;justify-content:space-between;align-items:center;z-index:100;background:linear-gradient(to bottom,rgba(9,9,9,0.95),transparent);}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.1em;color:var(--white);text-decoration:none;}
+.nav-back{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:#555;text-decoration:none;text-transform:uppercase;transition:color 0.2s;}
+.nav-back:hover{color:#999;}
+.wrap{max-width:900px;margin:0 auto;padding:140px 40px 120px;}
+.section-header{font-family:'DM Mono',monospace;font-size:14px;letter-spacing:0.18em;color:#999;text-transform:uppercase;margin-bottom:20px;}
+.div{height:1px;background:var(--div);margin:48px 0;}
+.tag-pill{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;color:#555;border:1px solid #222;padding:4px 12px;margin-bottom:20px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,10vw,100px);line-height:0.9;letter-spacing:0.03em;color:var(--white);margin-bottom:8px;}
+.hero-sub{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,48px);color:#2a2a2a;letter-spacing:0.05em;margin-bottom:32px;}
+.hero-desc{font-size:15px;color:var(--mid);line-height:1.9;max-width:520px;}
+.panels-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;}
+.panel-wrap{border:1px solid #1e1e1e;overflow:hidden;}
+.panel-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;color:#555;text-transform:uppercase;padding:8px 12px;border-bottom:1px solid #1a1a1a;background:#0d0d0d;}
+.tool-shell{background:var(--t-bg);color:var(--t-text);font-family:'DM Mono',monospace;font-size:10px;padding:10px;height:300px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#222 transparent;}
+.t-sec{margin-bottom:10px;}
+.t-title{font-size:8px;letter-spacing:0.12em;color:var(--t-mid);text-transform:uppercase;margin-bottom:5px;}
+.t-div{height:1px;background:var(--t-border);margin:8px 0;}
+.t-bg{display:flex;gap:4px;margin-bottom:4px;}
+.t-btn{flex:1;background:var(--t-btn);border:1px solid var(--t-border);color:var(--t-text);font-family:'DM Mono',monospace;font-size:8px;padding:4px 6px;cursor:pointer;letter-spacing:0.05em;transition:background 0.15s;}
+.t-btn:hover{background:#222;}
+.t-btn.hi{background:#1e1e1e;border-color:#3a3a3a;color:#efefef;}
+.t-btn.full{width:100%;}
+.t-tog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.t-tog-lbl{font-size:8px;color:var(--t-mid);}
+.t-tog{width:24px;height:12px;background:#1a1a1a;border:1px solid #333;border-radius:6px;position:relative;cursor:pointer;transition:background 0.2s;}
+.t-tog.on{background:#efefef;border-color:#efefef;}
+.t-tog::after{content:'';position:absolute;width:8px;height:8px;background:#444;border-radius:50%;top:1px;left:1px;transition:left 0.2s,background 0.2s;}
+.t-tog.on::after{left:13px;background:#111;}
+.t-sl-row{display:flex;align-items:center;gap:5px;margin-bottom:4px;}
+.t-sl-lbl{font-size:8px;color:var(--t-mid);width:36px;flex-shrink:0;}
+.t-sl{flex:1;height:2px;accent-color:#efefef;}
+.t-sl-v{font-size:8px;color:var(--t-text);width:24px;text-align:right;}
+.t-ex{background:#141414;border:1px solid var(--t-border);padding:6px 8px;margin-bottom:3px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.t-ex:hover{background:#1a1a1a;}
+.t-ex-name{font-size:9px;color:var(--t-text);}
+.t-ex-tag{font-size:7px;color:var(--t-mid);}
+.t-ex.featured{border-color:#3a3a3a;background:#1a1a1a;}.t-ex.featured .t-ex-name{color:#efefef;}
+.t-anchor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:6px;}
+.t-ap{background:#141414;border:1px solid var(--t-border);text-align:center;padding:5px;cursor:pointer;font-size:10px;color:var(--t-mid);}
+.t-ap:hover{background:#1e1e1e;color:var(--t-text);}.t-ap.center{color:#efefef;}
+.t-palette{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px;}
+.t-sw{width:16px;height:16px;border-radius:2px;cursor:pointer;border:1px solid transparent;}.t-sw:hover,.t-sw.active{border-color:#fff;}
+.t-sfx{display:flex;align-items:center;gap:6px;background:#141414;border:1px solid var(--t-border);padding:6px 8px;margin-bottom:3px;}
+.t-sfx-play{width:16px;height:16px;background:#1a1a1a;border:1px solid #3a3a3a;color:#efefef;font-size:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;}
+.t-sfx-name{font-size:8px;color:var(--t-text);}.t-sfx-dur{font-size:7px;color:var(--t-mid);}
+.t-fp-row{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px;}
+.t-fp{font-size:7px;padding:2px 6px;background:#141414;border:1px solid var(--t-border);color:var(--t-mid);cursor:pointer;}
+.t-fp.active{border-color:#3a3a3a;color:#efefef;}
+.t-about-title{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--t-text);letter-spacing:0.1em;line-height:1;margin-bottom:4px;}
+.t-about-sub{font-size:8px;color:var(--t-mid);margin-bottom:4px;}.t-about-desc{font-size:8px;color:#444;margin-bottom:8px;line-height:1.6;}
+.t-graph-area{height:130px;background:#0d0d0d;border:1px solid var(--t-border);margin-bottom:6px;overflow:hidden;}
+.t-inp-wrap{display:flex;align-items:center;gap:4px;background:#0d0d0d;border:1px solid var(--t-border);padding:4px 6px;margin-bottom:6px;}
+.t-inp-wrap input{background:none;border:none;color:#ccc;font-family:'DM Mono',monospace;font-size:8px;width:100%;outline:none;}
+.t-inp-wrap input::placeholder{color:#333;}
+.features-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;}
+.feature-item{padding:20px;border:1px solid var(--dimmer);}
+.feature-icon{font-size:18px;margin-bottom:8px;}
+.feature-name{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:#888;text-transform:uppercase;margin-bottom:6px;}
+.feature-desc{font-size:12px;color:var(--mid);line-height:1.7;}
+footer{max-width:900px;margin:0 auto;padding:40px 40px 60px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--div);}
+.footer-name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.1em;color:var(--dimmer);}
+.footer-tag{font-family:'DM Mono',monospace;font-size:10px;color:var(--dimmer);letter-spacing:0.15em;}
+@keyframes fadeup{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.wrap>*{animation:fadeup 0.6s ease both;}
+@media(max-width:640px){.panels-grid,.features-grid{grid-template-columns:1fr;}.wrap{padding:120px 24px 80px;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">DJH</a>
+  <a href="index.html" class="nav-back">← Back</a>
+</nav>
+<div class="wrap">
+
+  <div class="tag-pill">DNX TOOLS · V1 · COMING SOON</div>
+  <div class="hero-title">DNX Tools</div>
+  <div class="hero-sub">After Effects Extension</div>
+  <p class="hero-desc">A full motion design utility built for After Effects editors. Curve graphs, auto tools, expressions, presets, SFX and more — all in one panel. Built for music video editors, SFX workers and motion designers.</p>
+
+  <div class="div"></div>
+  <div class="section-header">Live preview — all panels</div>
+  <p style="font-family:'DM Mono',monospace;font-size:10px;color:#555;margin-bottom:24px;letter-spacing:0.1em;">INTERACTIVE · BUTTONS AND SLIDERS WORK</p>
+  <p style="font-family:'DM Mono',monospace;font-size:10px;color:#666;margin-bottom:24px;letter-spacing:0.08em;border:1px solid #222;padding:12px;">Some panels won't work fully in this preview — certain features need AE connected to actually run. Toggles, sliders and controls are interactive tho.</p>
+
+  <div class="panels-grid">
+
+    <!-- GRAPH -->
+    <div class="panel-wrap">
+      <div class="panel-label">〜 Graph Editor</div>
+      <div class="tool-shell">
+        <div class="t-graph-area">
+          <svg width="100%" height="100%" viewBox="0 0 240 130" preserveAspectRatio="none">
+            <line x1="0" y1="32" x2="240" y2="32" stroke="#1e1e1e" stroke-width="0.5"/>
+            <line x1="0" y1="65" x2="240" y2="65" stroke="#1e1e1e" stroke-width="0.5"/>
+            <line x1="0" y1="98" x2="240" y2="98" stroke="#1e1e1e" stroke-width="0.5"/>
+            <line x1="60" y1="0" x2="60" y2="130" stroke="#1e1e1e" stroke-width="0.5"/>
+            <line x1="120" y1="0" x2="120" y2="130" stroke="#1e1e1e" stroke-width="0.5"/>
+            <line x1="180" y1="0" x2="180" y2="130" stroke="#1e1e1e" stroke-width="0.5"/>
+            <path d="M 0 120 C 20 120, 96 8, 240 8" stroke="#e8c84a" stroke-width="1.5" fill="none"/>
+            <line x1="0" y1="120" x2="20" y2="116" stroke="#e8c84a" stroke-width="0.5" stroke-dasharray="2,2" opacity="0.5"/>
+            <line x1="240" y1="8" x2="96" y2="12" stroke="#e8c84a" stroke-width="0.5" stroke-dasharray="2,2" opacity="0.5"/>
+            <circle cx="20" cy="116" r="3.5" fill="#e8c84a" stroke="#0d0d0d" stroke-width="1.5"/>
+            <circle cx="96" cy="12" r="3.5" fill="#e8c84a" stroke="#0d0d0d" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div style="font-size:8px;color:#888;margin-bottom:6px;font-family:'DM Mono',monospace;letter-spacing:0.05em;">0.08, 0.00, 0.40, 1.00</div>
+        <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn hi full">⇌ Frame Blend + Time Remap + Apply Curve</button></div>
+        <div class="t-bg" style="margin-top:4px;">
+          <button class="t-btn">⊕ Read from Keys</button>
+          <button class="t-btn">+ Save Curve</button>
+        </div>
+        <div class="t-div"></div>
+        <div class="t-title">Saved Curves</div>
+        <div style="font-size:8px;color:#222;font-style:italic;padding:4px 0;">No curves saved yet</div>
+      </div>
+    </div>
+
+    <!-- AUTO -->
+    <div class="panel-wrap">
+      <div class="panel-label">⬛ Auto Tools</div>
+      <div class="tool-shell">
+        <div class="t-sec">
+          <div class="t-title">Create</div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn hi">◉ Auto Null</button><button class="t-btn">▭ Adjustment</button></div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn">■ Auto Solid</button><button class="t-btn">⊡ AutoCrop</button></div>
+        </div>
+        <div class="t-div"></div>
+        <div class="t-sec">
+          <div class="t-title">Camera</div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn full">⬡ Camera Only</button></div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn hi full">⬡ Camera + Control Null</button></div>
+        </div>
+        <div class="t-div"></div>
+        <div class="t-sec">
+          <div class="t-title">Keyframes</div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn hi full">⎘ Clone Keys to Playhead</button></div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn full">⇄ Reverse Keys</button></div>
+        </div>
+        <div class="t-div"></div>
+        <div class="t-sec">
+          <div class="t-title">Audio</div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn hi full">♪ Audio → Keyframes</button></div>
+        </div>
+        <div class="t-div"></div>
+        <div class="t-sec">
+          <div class="t-title">Options</div>
+          <div class="t-tog-row"><span class="t-tog-lbl">Match timing</span><div class="t-tog on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="t-tog-row"><span class="t-tog-lbl">Auto parent</span><div class="t-tog on" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOTION -->
+    <div class="panel-wrap">
+      <div class="panel-label">✦ Motion</div>
+      <div class="tool-shell">
+        <div class="t-sec">
+          <div class="t-title">Anchor Point</div>
+          <div class="t-anchor-grid">
+            <div class="t-ap">◸</div><div class="t-ap">▲</div><div class="t-ap">◹</div>
+            <div class="t-ap">◀</div><div class="t-ap center">✦</div><div class="t-ap">▶</div>
+            <div class="t-ap">◺</div><div class="t-ap">▼</div><div class="t-ap">◿</div>
+          </div>
+        </div>
+        <div class="t-div"></div>
+        <div class="t-sec">
+          <div class="t-title">Sequence Layers</div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn">→ Forward</button><button class="t-btn">← Reverse</button></div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn">⊞ Stepped</button><button class="t-btn">≋ Stagger</button></div>
+          <div class="t-sl-row">
+            <span class="t-sl-lbl">Offset</span>
+            <input type="range" class="t-sl" min="0" max="60" value="5" oninput="this.nextElementSibling.textContent=this.value">
+            <span class="t-sl-v">5</span>
+          </div>
+        </div>
+        <div class="t-div"></div>
+        <div class="t-sec">
+          <div class="t-title">Layer Tools</div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn">AI → Shapes</button><button class="t-btn">⊡ Nest</button></div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn">Label Types</button><button class="t-btn">Snap Frame</button></div>
+        </div>
+        <div class="t-div"></div>
+        <div class="t-sec">
+          <div class="t-title">Color Palette</div>
+          <div class="t-palette">
+            <div class="t-sw active" style="background:#e06060"></div><div class="t-sw" style="background:#e5a030"></div>
+            <div class="t-sw" style="background:#e5d030"></div><div class="t-sw" style="background:#80c040"></div>
+            <div class="t-sw" style="background:#e080a0"></div><div class="t-sw" style="background:#a080e0"></div>
+            <div class="t-sw" style="background:#4090e0"></div><div class="t-sw" style="background:#30b0b0"></div>
+          </div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn full">Apply to Label</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEXT -->
+    <div class="panel-wrap">
+      <div class="panel-label">T Text</div>
+      <div class="tool-shell">
+        <div class="t-sec">
+          <div class="t-title">Split By</div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn hi">Chars</button><button class="t-btn">Words</button><button class="t-btn">Lines</button></div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn">Custom</button><button class="t-btn">Regex</button></div>
+        </div>
+        <div class="t-div"></div>
+        <div class="t-sec">
+          <div class="t-title">Layer Order</div>
+          <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn hi">Top → Bottom</button><button class="t-btn">Bottom → Top</button></div>
+        </div>
+        <div class="t-div"></div>
+        <div class="t-sec">
+          <div class="t-title">Options</div>
+          <div class="t-tog-row"><span class="t-tog-lbl">Delete original</span><div class="t-tog on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="t-tog-row"><span class="t-tog-lbl">RTL support</span><div class="t-tog" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+        <div style="margin-top:10px;"><button class="t-btn hi full">T · Split Text</button></div>
+      </div>
+    </div>
+
+    <!-- EXPRESSIONS -->
+    <div class="panel-wrap">
+      <div class="panel-label">{} Expressions</div>
+      <div class="tool-shell">
+        <div class="t-inp-wrap"><span style="color:#333;">◎</span><input placeholder="Search expressions…"></div>
+        <div class="t-ex featured"><div class="t-ex-name">Deep Bounce</div><div class="t-ex-tag">Bounce · DNX</div></div>
+        <div class="t-ex"><div class="t-ex-name">Wiggle</div><div class="t-ex-tag">Wiggle</div></div>
+        <div class="t-ex"><div class="t-ex-name">Inertial Bounce</div><div class="t-ex-tag">Bounce</div></div>
+        <div class="t-ex"><div class="t-ex-name">Smooth Delay</div><div class="t-ex-tag">Follow</div></div>
+        <div class="t-ex"><div class="t-ex-name">Wiggle Smooth</div><div class="t-ex-tag">Wiggle</div></div>
+        <div class="t-ex"><div class="t-ex-name">Loop Out</div><div class="t-ex-tag">Loop</div></div>
+        <div class="t-ex"><div class="t-ex-name">Loop In + Out</div><div class="t-ex-tag">Loop</div></div>
+        <div class="t-ex"><div class="t-ex-name">Time Remap Loop</div><div class="t-ex-tag">Loop</div></div>
+        <div class="t-ex"><div class="t-ex-name">Index Offset</div><div class="t-ex-tag">Util</div></div>
+        <div class="t-ex"><div class="t-ex-name">Flicker On/Off</div><div class="t-ex-tag">Wiggle</div></div>
+      </div>
+    </div>
+
+    <!-- PRESETS -->
+    <div class="panel-wrap">
+      <div class="panel-label">▦ Presets</div>
+      <div class="tool-shell">
+        <div class="t-inp-wrap"><span style="color:#333;">◎</span><input placeholder="Search presets…"></div>
+        <div class="t-fp-row">
+          <div class="t-fp active" onclick="document.querySelectorAll('.t-fp').forEach(e=>e.classList.remove('active'));this.classList.add('active')">All</div>
+          <div class="t-fp" onclick="document.querySelectorAll('.t-fp').forEach(e=>e.classList.remove('active'));this.classList.add('active')">Shake</div>
+          <div class="t-fp" onclick="document.querySelectorAll('.t-fp').forEach(e=>e.classList.remove('active'));this.classList.add('active')">Glitch</div>
+          <div class="t-fp" onclick="document.querySelectorAll('.t-fp').forEach(e=>e.classList.remove('active'));this.classList.add('active')">Blur</div>
+          <div class="t-fp" onclick="document.querySelectorAll('.t-fp').forEach(e=>e.classList.remove('active'));this.classList.add('active')">Looks</div>
+          <div class="t-fp" onclick="document.querySelectorAll('.t-fp').forEach(e=>e.classList.remove('active'));this.classList.add('active')">Slide</div>
+          <div class="t-fp" onclick="document.querySelectorAll('.t-fp').forEach(e=>e.classList.remove('active'));this.classList.add('active')">Warp</div>
+          <div class="t-fp" onclick="document.querySelectorAll('.t-fp').forEach(e=>e.classList.remove('active'));this.classList.add('active')">Framer</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+          <div style="background:#141414;border:1px solid #1e1e1e;padding:8px;font-family:'DM Mono',monospace;font-size:8px;color:#666;cursor:pointer;">Heavy Shake</div>
+          <div style="background:#141414;border:1px solid #1e1e1e;padding:8px;font-family:'DM Mono',monospace;font-size:8px;color:#666;cursor:pointer;">Glitch Hit</div>
+          <div style="background:#141414;border:1px solid #1e1e1e;padding:8px;font-family:'DM Mono',monospace;font-size:8px;color:#666;cursor:pointer;">Soft Blur</div>
+          <div style="background:#141414;border:1px solid #1e1e1e;padding:8px;font-family:'DM Mono',monospace;font-size:8px;color:#666;cursor:pointer;">Cinematic</div>
+          <div style="background:#141414;border:1px solid #1e1e1e;padding:8px;font-family:'DM Mono',monospace;font-size:8px;color:#666;cursor:pointer;">Slide In</div>
+          <div style="background:#141414;border:1px solid #1e1e1e;padding:8px;font-family:'DM Mono',monospace;font-size:8px;color:#666;cursor:pointer;">Warp Push</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SFX -->
+    <div class="panel-wrap">
+      <div class="panel-label">♪ SFX</div>
+      <div class="tool-shell">
+        <div class="t-inp-wrap"><span style="color:#333;">◎</span><input placeholder="Search sounds…"></div>
+        <div class="t-sfx">
+          <div class="t-sfx-play">▶</div>
+          <div><div class="t-sfx-name">Whoosh Fast</div><div class="t-sfx-dur">0.4s</div></div>
+        </div>
+        <div class="t-sfx">
+          <div class="t-sfx-play">▶</div>
+          <div><div class="t-sfx-name">Impact Deep</div><div class="t-sfx-dur">0.8s</div></div>
+        </div>
+        <div class="t-sfx">
+          <div class="t-sfx-play">▶</div>
+          <div><div class="t-sfx-name">Whoosh Soft</div><div class="t-sfx-dur">0.6s</div></div>
+        </div>
+        <div style="margin-top:6px;"><button class="t-btn full">+ Add to Comp</button></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="panel-wrap">
+      <div class="panel-label">⚙ Settings</div>
+      <div class="tool-shell">
+        <div class="t-about-title">DNX<br>TOOLS</div>
+        <div class="t-about-sub">Motion Design Utilities · v1.0</div>
+        <div class="t-about-desc">Professional After Effects extension for motion designers.</div>
+        <div style="display:flex;gap:4px;margin-bottom:4px;"><button class="t-btn">Docs ↗</button><button class="t-btn hi">Check Update</button></div>
+        <div class="t-div"></div>
+        <div class="t-title">Graph</div>
+        <div class="t-tog-row"><span class="t-tog-lbl">Auto-apply on drag</span><div class="t-tog" onclick="this.classList.toggle('on')"></div></div>
+        <div class="t-div"></div>
+        <div class="t-title">Preferences</div>
+        <div class="t-tog-row"><span class="t-tog-lbl">Show tooltips</span><div class="t-tog on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="t-tog-row"><span class="t-tog-lbl">Confirm before apply</span><div class="t-tog" onclick="this.classList.toggle('on')"></div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="div"></div>
+  <div class="section-header">What's included</div>
+  <div class="features-grid">
+    <div class="feature-item"><div class="feature-icon">〜</div><div class="feature-name">Graph Editor</div><div class="feature-desc">Custom curve editor with saved curve library. One-click time remap workflow with frame blend applied automatically.</div></div>
+    <div class="feature-item"><div class="feature-icon">⬛</div><div class="feature-name">Auto Tools</div><div class="feature-desc">Auto null, adjustment layers, camera rigs, keyframe cloning, reversing, and audio-to-keyframe conversion.</div></div>
+    <div class="feature-item"><div class="feature-icon">✦</div><div class="feature-name">Motion</div><div class="feature-desc">Anchor point grid, layer sequencing with offset control, AI to shapes, nesting, and a full label colour palette.</div></div>
+    <div class="feature-item"><div class="feature-icon">T</div><div class="feature-name">Text Tools</div><div class="feature-desc">Split text by characters, words, lines, custom delimiter or regex. Layer order control and RTL support.</div></div>
+    <div class="feature-item"><div class="feature-icon">{}</div><div class="feature-name">Expressions</div><div class="feature-desc">Deep Bounce, Wiggle, Inertial Bounce, Smooth Delay, Loop variants, Flicker and more — with sliders to dial in values.</div></div>
+    <div class="feature-item"><div class="feature-icon">▦</div><div class="feature-name">Presets</div><div class="feature-desc">Categorised preset library — Shake, Glitch, Blur, Looks, Slide, Warp, Framer. Searchable and filterable.</div></div>
+    <div class="feature-item"><div class="feature-icon">♪</div><div class="feature-name">SFX</div><div class="feature-desc">Built-in sound effect library. Preview and add directly to your composition from inside the panel.</div></div>
+    <div class="feature-item"><div class="feature-icon">⚙</div><div class="feature-name">Settings</div><div class="feature-desc">Auto-apply on drag, tooltip controls and preferences — all configurable without leaving AE.</div></div>
+  </div>
+
+  <div class="div"></div>
+  <p style="font-family:'DM Mono',monospace;font-size:11px;color:#444;letter-spacing:0.1em;">V1 RELEASING SOON — DNX TOOLS</p>
+
+</div>
+<footer>
+  <span class="footer-name" style="color:#333;">DJHachet · DNX</span>
+  <span class="footer-tag" style="color:#333;">© 2026 · UK</span>
+</footer>
+
+<script>
+// Toggles already work via onclick classList.toggle
+
+// Anchor grid — highlight selected
+document.querySelectorAll('.t-ap').forEach(ap => {
+  ap.addEventListener('click', function() {
+    this.closest('.t-anchor-grid').querySelectorAll('.t-ap').forEach(a => {
+      a.style.borderColor = '';
+      a.style.color = '';
+    });
+    this.style.borderColor = '#efefef';
+    this.style.color = '#efefef';
+  });
+});
+
+// Split buttons — highlight selected
+document.querySelectorAll('.t-sec').forEach(sec => {
+  const splitBtns = sec.querySelectorAll('button');
+  splitBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      // only toggle within same row group
+      const group = this.closest('div[style*="display:flex"]') || this.parentElement;
+      group.querySelectorAll('button').forEach(b => {
+        b.style.borderColor = '';
+        b.style.color = '#888';
+      });
+      this.style.borderColor = '#3a3a3a';
+      this.style.color = '#efefef';
+    });
+  });
+});
+
+// Colour swatches — highlight selected
+document.querySelectorAll('.t-palette').forEach(pal => {
+  pal.querySelectorAll('.t-sw').forEach(sw => {
+    sw.addEventListener('click', function() {
+      pal.querySelectorAll('.t-sw').forEach(s => s.style.outline = '');
+      this.style.outline = '2px solid #efefef';
+      this.style.outlineOffset = '1px';
+    });
+  });
+});
+
+// Filter pills — highlight selected (per panel)
+document.querySelectorAll('.t-fp-row').forEach(row => {
+  row.querySelectorAll('.t-fp').forEach(fp => {
+    fp.addEventListener('click', function() {
+      row.querySelectorAll('.t-fp').forEach(f => {
+        f.style.borderColor = '';
+        f.style.color = '';
+      });
+      this.style.borderColor = '#3a3a3a';
+      this.style.color = '#efefef';
+    });
+  });
+});
+
+// Expression rows — expand/collapse
+document.querySelectorAll('.t-ex').forEach(ex => {
+  ex.addEventListener('click', function() {
+    const next = this.nextElementSibling;
+    if(next && next.classList.contains('t-ex-panel')) {
+      next.style.display = next.style.display === 'block' ? 'none' : 'block';
+    }
+  });
+});
+
+// Preset items — highlight selected
+document.querySelectorAll('[style*="grid-template-columns: 1fr 1fr"] > div').forEach(pc => {
+  pc.addEventListener('click', function() {
+    const grid = this.parentElement;
+    grid.querySelectorAll('div').forEach(p => {
+      p.style.borderColor = '';
+      p.style.color = '#666';
+    });
+    this.style.borderColor = '#3a3a3a';
+    this.style.color = '#efefef';
+  });
+});
+
+// Sliders — update value display (already works via oninput)
+
+// Graph curve handles — draggable feel
+const svg = document.querySelector('.t-graph-area svg');
+if(svg) {
+  const circles = svg.querySelectorAll('circle');
+  circles.forEach(c => {
+    c.style.cursor = 'grab';
+    c.addEventListener('mousedown', function(e) {
+      e.preventDefault();
+      const rect = svg.getBoundingClientRect();
+      const move = (ev) => {
+        const x = Math.max(0, Math.min(svg.viewBox.baseVal.width, (ev.clientX - rect.left) / rect.width * svg.viewBox.baseVal.width));
+        const y = Math.max(0, Math.min(svg.viewBox.baseVal.height, (ev.clientY - rect.top) / rect.height * svg.viewBox.baseVal.height));
+        c.setAttribute('cx', x.toFixed(1));
+        c.setAttribute('cy', y.toFixed(1));
+        // update path roughly
+        const cs = svg.querySelectorAll('circle');
+        const c1x = parseFloat(cs[0].getAttribute('cx'));
+        const c1y = parseFloat(cs[0].getAttribute('cy'));
+        const c2x = parseFloat(cs[1].getAttribute('cx'));
+        const c2y = parseFloat(cs[1].getAttribute('cy'));
+        const path = svg.querySelector('path');
+        if(path) path.setAttribute('d', `M 0 120 C ${c1x} ${c1y}, ${c2x} ${c2y}, 240 8`);
+        // update dashes
+        const lines = svg.querySelectorAll('line:not([stroke="#1e1e1e"])');
+        if(lines[0]) { lines[0].setAttribute('x2', c1x); lines[0].setAttribute('y2', c1y); }
+        if(lines[1]) { lines[1].setAttribute('x2', c2x); lines[1].setAttribute('y2', c2y); }
+        // update val display
+        const val = document.querySelector('.t-graph-area + div');
+        if(val) val.textContent = `${(c1x/240).toFixed(2)}, ${(1-c1y/120).toFixed(2)}, ${(c2x/240).toFixed(2)}, ${(1-c2y/120).toFixed(2)}`;
+      };
+      const up = () => { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); };
+      document.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', up);
+    });
+  });
+}
+</script>
+
+</body>
+</html>

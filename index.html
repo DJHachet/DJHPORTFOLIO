@@ -68,7 +68,7 @@ section{
 }
 .tag{
   font-family:'DM Mono',monospace;
-  font-size:11px;letter-spacing:0.2em;color:var(--dim);
+  font-size:11px;letter-spacing:0.2em;color:#666;
   text-transform:uppercase;margin-bottom:20px;
 }
 .body-text{font-size:15px;font-weight:300;color:var(--mid);line-height:1.9;}
@@ -91,19 +91,19 @@ section{
 .hero-aka{
   font-family:'Bebas Neue',sans-serif;
   font-size:clamp(26px,4vw,40px);
-  color:var(--dim);letter-spacing:0.05em;margin-top:6px;
+  color:#666;letter-spacing:0.05em;margin-top:6px;
   animation:fadeup 0.7s 0.2s ease both;
 }
 .hero-sub{
   font-family:'DM Mono',monospace;
-  font-size:11px;color:var(--dim);letter-spacing:0.2em;
+  font-size:11px;color:#666;letter-spacing:0.2em;
   text-transform:uppercase;margin-bottom:16px;
   animation:fadeup 0.6s ease both;
 }
 .hero-scroll{
   margin-top:60px;
   font-family:'DM Mono',monospace;
-  font-size:10px;color:var(--dimmer);letter-spacing:0.2em;
+  font-size:10px;color:#555;letter-spacing:0.2em;
   text-transform:uppercase;
   animation:fadeup 0.6s 0.5s ease both;
 }
@@ -111,7 +111,7 @@ section{
 /* ABOUT */
 .dnx-badge{
   font-family:'Bebas Neue',sans-serif;
-  font-size:60px;color:var(--dimmer);
+  font-size:60px;color:#555;
   letter-spacing:0.1em;line-height:1;margin-bottom:16px;
 }
 .pack-link{
@@ -122,7 +122,7 @@ section{
   color:#555;letter-spacing:0.08em;text-decoration:none;
   transition:border-color 0.2s,color 0.2s;
 }
-.pack-link:hover{border-color:var(--dim);color:#888;}
+.pack-link:hover{border-color:#666;color:#888;}
 .pack-link::after{content:'↗';font-size:14px;opacity:0.5;}
 
 /* WORK LINKS */
@@ -132,9 +132,9 @@ section{
   display:flex;flex-direction:column;gap:4px;
   transition:border-color 0.2s;text-decoration:none;
 }
-.link-item:hover{border-color:var(--dim);}
+.link-item:hover{border-color:#666;}
 .link-handle{font-family:'DM Mono',monospace;font-size:12px;color:#888;letter-spacing:0.05em;}
-.link-desc{font-size:11px;color:var(--dim);letter-spacing:0.05em;}
+.link-desc{font-size:11px;color:#666;letter-spacing:0.05em;}
 
 /* PORTFOLIO */
 .portfolio-grid{
@@ -179,7 +179,7 @@ section{
 }
 .price-dur{
   font-family:'DM Mono',monospace;
-  font-size:11px;color:var(--dim);letter-spacing:0.1em;
+  font-size:11px;color:#666;letter-spacing:0.1em;
 }
 .includes-list{list-style:none;margin-top:8px;}
 .includes-list li{
@@ -199,7 +199,7 @@ section{
 }
 .payment-rate{
   font-family:'DM Mono',monospace;
-  font-size:12px;color:var(--dim);letter-spacing:0.08em;margin-top:4px;
+  font-size:12px;color:#666;letter-spacing:0.08em;margin-top:4px;
 }
 
 /* CONTACT */
@@ -208,10 +208,10 @@ section{
   padding:20px;border:1px solid var(--dimmer);
   text-decoration:none;transition:border-color 0.2s;
 }
-.contact-item:hover{border-color:var(--dim);}
+.contact-item:hover{border-color:#666;}
 .contact-platform{
   font-family:'DM Mono',monospace;
-  font-size:10px;color:var(--dim);letter-spacing:0.15em;
+  font-size:10px;color:#666;letter-spacing:0.15em;
   text-transform:uppercase;margin-bottom:6px;
 }
 .contact-handle{font-size:14px;color:#888;letter-spacing:0.02em;}
@@ -225,11 +225,11 @@ footer{
 }
 .footer-name{
   font-family:'Bebas Neue',sans-serif;
-  font-size:18px;letter-spacing:0.1em;color:var(--dimmer);
+  font-size:18px;letter-spacing:0.1em;color:#444;
 }
 .footer-tag{
   font-family:'DM Mono',monospace;
-  font-size:10px;color:var(--dimmer);letter-spacing:0.15em;
+  font-size:10px;color:#444;letter-spacing:0.15em;
 }
 
 @keyframes fadeup{
@@ -263,7 +263,7 @@ footer{
   transition:color 0.2s;user-select:none;
 }
 .faq-q:hover{color:#aaa;}
-.faq-arrow{font-size:18px;color:#333;transition:transform 0.2s;flex-shrink:0;margin-left:16px;}
+.faq-arrow{font-size:18px;color:#555;transition:transform 0.2s;flex-shrink:0;margin-left:16px;}
 .faq-item.open .faq-arrow{transform:rotate(45deg);color:#666;}
 .faq-a{
   font-size:14px;color:var(--mid);line-height:1.85;
@@ -289,6 +289,7 @@ footer{
     <li><a href="#work">Previews</a></li>
     <li><a href="#testimonials">Reviews</a></li>
     <li><a href="#contact">Contact</a></li>
+    <li><a href="#tools">Tools</a></li>
   </ul>
 </nav>
 
@@ -435,7 +436,7 @@ footer{
 <section id="prices">
   <div class="section-header">Prices · GBP only</div>
   <div class="div"></div>
-  <p class="body-text" style="font-size:12px;color:var(--dim);margin-bottom:24px;">Prices can change at any time — always check here for the latest.</p>
+  <p class="body-text" style="font-size:12px;color:#666;margin-bottom:24px;">Prices can change at any time — always check here for the latest.</p>
 
   <div class="price-row">
     <div>
@@ -467,7 +468,7 @@ footer{
     </div>
   </div>
   <ul class="includes-list" style="margin-top:0;">
-    <li style="color:var(--dim);font-size:12px;">Prices can change at any time — always check here for the latest.</li>
+    <li style="color:#666;font-size:12px;">Prices can change at any time — always check here for the latest.</li>
   </ul>
 
   <div style="padding:16px 20px;margin:20px 0;border:1px solid var(--dimmer);">
@@ -477,9 +478,9 @@ footer{
   <div class="div"></div>
 
   <div style="padding:24px 0;border-top:1px solid var(--ghost);border-bottom:1px solid var(--ghost);margin-bottom:32px;">
-    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--dim);margin-bottom:10px;">TURNAROUND</div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;color:#666;margin-bottom:10px;">TURNAROUND</div>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--mid);letter-spacing:0.05em;line-height:1;">7 – 13 Days</div>
-    <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:0.2em;margin-top:10px;">QUALITY OVER QUANTITY</div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;color:#666;letter-spacing:0.2em;margin-top:10px;">QUALITY OVER QUANTITY</div>
   </div>
 
   <div class="tag">Includes</div>
@@ -522,7 +523,7 @@ footer{
   </div>
   <div style="width:100%;overflow-x:auto;border:1px solid #2a2a2a;margin:0 40px;width:calc(100% - 80px);">
     <div id="waitlist-table" style="min-width:900px;padding:0 40px;">
-      <p style="font-family:'DM Mono',monospace;font-size:11px;color:#333;padding:20px 0;">Loading...</p>
+      <p style="font-family:'DM Mono',monospace;font-size:11px;color:#555;padding:20px 0;">Loading...</p>
     </div>
   </div>
 </div>
@@ -530,7 +531,7 @@ footer{
 <style>
 .wl-table{width:100%;border-collapse:collapse;font-family:'DM Sans',sans-serif;}
 .wl-table td{padding:10px 14px;font-size:12px;color:#aaa;border-bottom:1px solid #111;white-space:nowrap;}
-.wl-table tr.wl-header td{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;color:#333;text-transform:uppercase;border-bottom:1px solid #1e1e1e;}
+.wl-table tr.wl-header td{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;color:#555;text-transform:uppercase;border-bottom:1px solid #1e1e1e;}
 .wl-table tr.wl-month td{background:#000;font-family:'Bebas Neue',sans-serif;font-size:18px;color:#666;letter-spacing:0.05em;padding:14px 14px;}
 .wl-table tr.wl-done td{color:#aaa;}
 .wl-table tr.wl-cancelled td{color:#aaa;}
@@ -550,7 +551,7 @@ footer{
     .then(r => r.json())
     .then(data => {
       const rows = data.values || [];
-      if(!rows.length){ document.getElementById('waitlist-table').innerHTML = '<p style="font-family:DM Mono,monospace;font-size:11px;color:#333;padding:20px 0;">No data found.</p>'; return; }
+      if(!rows.length){ document.getElementById('waitlist-table').innerHTML = '<p style="font-family:DM Mono,monospace;font-size:11px;color:#555;padding:20px 0;">No data found.</p>'; return; }
 
       // Find where March 2026 starts
       // Hardcode start from row 153 (March 2026 header) — update this number when adding new months
@@ -591,14 +592,14 @@ footer{
 
       // Add 5 empty placeholder rows for upcoming slots
       for(let i = 0; i < 5; i++){
-        tableHtml += `<tr class="wl-scheduled"><td style="color:#222;">—</td><td></td><td></td><td></td><td></td><td></td></tr>`;
+        tableHtml += `<tr class="wl-scheduled"><td style="color:#555;">—</td><td></td><td></td><td></td><td></td><td></td></tr>`;
       }
 
       tableHtml += '</table>';
       document.getElementById('waitlist-table').innerHTML = tableHtml;
     })
     .catch(e => {
-      document.getElementById('waitlist-table').innerHTML = '<p style="font-family:DM Mono,monospace;font-size:11px;color:#333;padding:20px 0;">Could not load waitlist. <a href="https://docs.google.com/spreadsheets/d/1BrkgoCxIabSAmEzJR9KzyY_QM1YCCauDINDHQ6S2ti8" target="_blank" style="color:#555;">Open directly ↗</a></p>';
+      document.getElementById('waitlist-table').innerHTML = '<p style="font-family:DM Mono,monospace;font-size:11px;color:#555;padding:20px 0;">Could not load waitlist. <a href="https://docs.google.com/spreadsheets/d/1BrkgoCxIabSAmEzJR9KzyY_QM1YCCauDINDHQ6S2ti8" target="_blank" style="color:#555;">Open directly ↗</a></p>';
     });
 })();
 </script>
@@ -644,7 +645,7 @@ footer{
     <li>Edits may not be used for malicious, hateful, or discriminatory content.</li>
     <li>By commissioning you agree to these terms.</li>
   </ul>
-  <p class="body-text" style="font-size:12px;margin-top:24px;color:var(--dim);">Questions? DM me before booking and we can talk it through. Full deposit policy <a href="deposit.html" style="color:#555;text-decoration:underline;">here</a>.</p>
+  <p class="body-text" style="font-size:12px;margin-top:24px;color:#666;">Questions? DM me before booking and we can talk it through. Full deposit policy <a href="deposit.html" style="color:#555;text-decoration:underline;">here</a>.</p>
 </section>
 
 <!-- PROCESS -->
@@ -654,26 +655,26 @@ footer{
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;">
 
     <div style="padding:24px 20px;border:1px solid var(--dimmer);">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:72px;color:var(--dimmer);line-height:1;margin-bottom:8px;">01</div>
-      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:var(--dim);margin-bottom:8px;">DEPOSIT</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:72px;color:#555;line-height:1;margin-bottom:8px;">01</div>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:#666;margin-bottom:8px;">DEPOSIT</div>
       <div style="font-size:13px;color:var(--mid);line-height:1.7;">50% upfront to lock your slot. Once that's in, you're on the board.</div>
     </div>
 
     <div style="padding:24px 20px;border:1px solid var(--dimmer);">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:72px;color:var(--dimmer);line-height:1;margin-bottom:8px;">02</div>
-      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:var(--dim);margin-bottom:8px;">PREP &amp; FILMING</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:72px;color:#555;line-height:1;margin-bottom:8px;">02</div>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:#666;margin-bottom:8px;">PREP &amp; FILMING</div>
       <div style="font-size:13px;color:var(--mid);line-height:1.7;">Recording is handled by me — direction, timing, the full edit. If you need posers/dancers I can try help you find some, just lmk in advance and I'll see who I know. Can't always guarantee it tho.</div>
     </div>
 
     <div style="padding:24px 20px;border:1px solid var(--dimmer);">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:72px;color:var(--dimmer);line-height:1;margin-bottom:8px;">03</div>
-      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:var(--dim);margin-bottom:8px;">REVISIONS</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:72px;color:#555;line-height:1;margin-bottom:8px;">03</div>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:#666;margin-bottom:8px;">REVISIONS</div>
       <div style="font-size:13px;color:var(--mid);line-height:1.7;">We go over it together before export. Fine-tuning only — not a full redo. Discussed before anything is finalised.</div>
     </div>
 
     <div style="padding:24px 20px;border:1px solid var(--dimmer);">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:72px;color:var(--dimmer);line-height:1;margin-bottom:8px;">04</div>
-      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:var(--dim);margin-bottom:8px;">DELIVERY</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:72px;color:#555;line-height:1;margin-bottom:8px;">04</div>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:#666;margin-bottom:8px;">DELIVERY</div>
       <div style="font-size:13px;color:var(--mid);line-height:1.7;">Remaining 50% due, then your video is yours. Clean and on time.</div>
     </div>
 
@@ -738,6 +739,18 @@ footer{
     <div class="testimonial">
       <div class="testimonial-text">"Fiyaaaa"</div>
     </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools">
+  <div class="section-header">DNX Tools</div>
+  <div class="div"></div>
+  <div style="border:1px solid var(--dimmer);padding:32px;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--white);letter-spacing:0.05em;line-height:1;margin-bottom:8px;">DNX Tools</div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;color:#555;margin-bottom:20px;">AFTER EFFECTS EXTENSION · V1 · COMING SOON</div>
+    <p style="font-size:14px;color:var(--mid);line-height:1.85;margin-bottom:24px;">A full motion design utility built for After Effects editors. Curve graphs, auto tools, expressions, presets, SFX and more — all in one panel. Built for music video editors, SFX workers and motion designers.</p>
+    <a href="tools.html" style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:#777;text-decoration:none;border-bottom:1px solid #2a2a2a;padding-bottom:2px;" onmouseover="this.style.color='#bbb'" onmouseout="this.style.color='#777'">preview all panels →</a>
   </div>
 </section>
 
