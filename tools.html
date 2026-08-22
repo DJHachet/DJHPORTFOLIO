@@ -1,3 +1,4 @@
+<!-- v20260822 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,13 +81,160 @@ footer{max-width:900px;margin:0 auto;padding:40px 40px 60px;display:flex;justify
 @keyframes fadeup{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 .wrap>*{animation:fadeup 0.6s ease both;}
 @media(max-width:640px){.panels-grid,.features-grid{grid-template-columns:1fr;}.wrap{padding:120px 24px 80px;}}
+
+/* ===== SHARED: slide-out menu + page transition + scroll reveal ===== */
+
+/* hamburger toggle */
+.nav-toggle{
+  display:flex;flex-direction:column;justify-content:center;gap:5px;
+  width:34px;height:34px;background:none;border:none;cursor:pointer;
+  padding:0;z-index:102;
+}
+.nav-toggle span{
+  display:block;height:1.5px;width:24px;background:#aaa;margin-left:auto;
+  transition:transform .35s cubic-bezier(.65,0,.35,1),width .35s cubic-bezier(.65,0,.35,1),opacity .25s;
+}
+.nav-toggle span:nth-child(2){width:18px;}
+.nav-toggle:hover span{background:var(--white);width:24px;}
+body.menu-open .nav-toggle span:nth-child(1){transform:translateY(6.5px) rotate(45deg);width:24px;}
+body.menu-open .nav-toggle span:nth-child(2){opacity:0;}
+body.menu-open .nav-toggle span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);width:24px;}
+
+/* backdrop */
+.menu-backdrop{
+  position:fixed;inset:0;background:rgba(6,6,6,0.6);
+  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+  opacity:0;visibility:hidden;transition:opacity .4s ease,visibility .4s;z-index:150;
+}
+body.menu-open .menu-backdrop{opacity:1;visibility:visible;}
+
+/* slide-out panel */
+.menu-panel{
+  position:fixed;top:0;right:0;height:100%;
+  width:min(440px,86vw);
+  background:#0b0b0b;border-left:1px solid #1a1a1a;
+  z-index:151;
+  transform:translateX(100%);
+  transition:transform .55s cubic-bezier(.65,0,.35,1);
+  display:flex;flex-direction:column;
+  padding:96px 44px 40px;
+  overflow-y:auto;
+}
+body.menu-open .menu-panel{transform:translateX(0);}
+.menu-close{
+  position:absolute;top:28px;right:40px;
+  background:none;border:none;color:#555;cursor:pointer;
+  font-family:'DM Mono',monospace;font-size:22px;line-height:1;
+  transition:color .2s;
+}
+.menu-close:hover{color:var(--white);}
+.menu-eyebrow{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.22em;
+  color:#444;text-transform:uppercase;margin-bottom:28px;
+}
+.menu-links{list-style:none;display:flex;flex-direction:column;gap:2px;margin-bottom:auto;}
+.menu-links li{overflow:hidden;}
+.menu-link{
+  display:flex;align-items:baseline;gap:16px;
+  text-decoration:none;padding:7px 0;
+  opacity:0;transform:translateY(18px);
+  transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1),color .2s;
+}
+body.menu-open .menu-link{opacity:1;transform:translateY(0);}
+.menu-link .idx{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;
+  color:#3a3a3a;width:22px;flex-shrink:0;
+  transition:color .2s;
+}
+.menu-link .lbl{
+  font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:0.04em;
+  color:#777;line-height:1;transition:color .2s,transform .3s;
+}
+.menu-link:hover .lbl{color:var(--white);transform:translateX(4px);}
+.menu-link:hover .idx{color:#666;}
+.menu-link.active .lbl{color:var(--white);}
+.menu-link.active .idx{color:#888;}
+
+/* stagger — one rule per item + spare (10 links max here) */
+body.menu-open .menu-link{transition-delay:.10s;}
+body.menu-open .menu-links li:nth-child(1) .menu-link{transition-delay:.14s;}
+body.menu-open .menu-links li:nth-child(2) .menu-link{transition-delay:.20s;}
+body.menu-open .menu-links li:nth-child(3) .menu-link{transition-delay:.26s;}
+body.menu-open .menu-links li:nth-child(4) .menu-link{transition-delay:.32s;}
+body.menu-open .menu-links li:nth-child(5) .menu-link{transition-delay:.38s;}
+body.menu-open .menu-links li:nth-child(6) .menu-link{transition-delay:.44s;}
+body.menu-open .menu-links li:nth-child(7) .menu-link{transition-delay:.50s;}
+body.menu-open .menu-links li:nth-child(8) .menu-link{transition-delay:.56s;}
+body.menu-open .menu-links li:nth-child(9) .menu-link{transition-delay:.62s;}
+body.menu-open .menu-links li:nth-child(10) .menu-link{transition-delay:.68s;}
+body.menu-open .menu-links li:nth-child(11) .menu-link{transition-delay:.74s;}
+
+.menu-foot{margin-top:36px;padding-top:28px;border-top:1px solid #1a1a1a;}
+.menu-foot-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;color:#444;text-transform:uppercase;margin-bottom:10px;}
+.menu-foot a{font-family:'DM Sans',sans-serif;font-size:14px;color:#888;text-decoration:none;transition:color .2s;}
+.menu-foot a:hover{color:var(--white);}
+
+/* ===== page transition ===== */
+.pt-cover{
+  position:fixed;inset:0;z-index:900;
+  background:#0b0b0b;
+  transform:scaleY(0);transform-origin:bottom;
+  pointer-events:none;
+  display:flex;align-items:center;justify-content:center;
+}
+.pt-cover.in{transform:scaleY(1);transform-origin:bottom;transition:transform .5s cubic-bezier(.65,0,.35,1);}
+.pt-cover.out{transform:scaleY(0);transform-origin:top;transition:transform .5s cubic-bezier(.65,0,.35,1);}
+.pt-label{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,10vw,104px);
+  letter-spacing:0.06em;color:#f0f0f0;
+  opacity:0;transform:translateY(20px);
+}
+.pt-cover.in .pt-label{opacity:1;transform:translateY(0);transition:opacity .4s .12s ease,transform .4s .12s cubic-bezier(.2,.7,.2,1);}
+.pt-bar{
+  position:fixed;left:0;top:0;height:2px;width:0;background:#e8c84a;
+  z-index:901;opacity:0;
+}
+@media(prefers-reduced-motion:reduce){
+  .pt-cover,.pt-cover.in,.pt-cover.out,.pt-label,.menu-link{transition:none !important;}
+}
+
+/* ===== scroll reveal ===== */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1);}
+.reveal.on{opacity:1;transform:translateY(0);}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1 !important;transform:none !important;}}
+
 </style>
 </head>
 <body>
+<!-- SLIDE-OUT MENU -->
+<div class="menu-backdrop" data-menu-close></div>
+<aside class="menu-panel" aria-label="Main menu">
+  <button class="menu-close" data-menu-close aria-label="Close menu">✕</button>
+  <div class="menu-eyebrow">Menu · DJHachet</div>
+  <ul class="menu-links">
+    <li><a class="menu-link" href="index.html"><span class="idx">01</span><span class="lbl">Home</span></a></li>
+    <li><a class="menu-link" href="faq.html"><span class="idx">02</span><span class="lbl">FAQ</span></a></li>
+    <li><a class="menu-link" href="about.html"><span class="idx">03</span><span class="lbl">About</span></a></li>
+    <li><a class="menu-link" href="booking.html"><span class="idx">04</span><span class="lbl">Booking</span></a></li>
+    <li><a class="menu-link" href="waitlist.html"><span class="idx">05</span><span class="lbl">Waitlist</span></a></li>
+    <li><a class="menu-link" href="work.html"><span class="idx">06</span><span class="lbl">Work</span></a></li>
+    <li><a class="menu-link" href="deposit.html"><span class="idx">07</span><span class="lbl">Deposit</span></a></li>
+    <li><a class="menu-link active" href="tools.html"><span class="idx">08</span><span class="lbl">Tools</span></a></li>
+    <li><a class="menu-link" href="contact.html"><span class="idx">09</span><span class="lbl">Contact</span></a></li>
+  </ul>
+  <div class="menu-foot">
+    <div class="menu-foot-label">Get in touch</div>
+    <a href="https://guns.lol/djhprod" target="_blank" rel="noopener">guns.lol/djhprod ↗</a>
+  </div>
+</aside>
 <nav>
   <a href="index.html" class="nav-logo">DJH</a>
   <a href="index.html" class="nav-back">← Back</a>
+  <button class="nav-toggle" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div id="pagewrap" class="page-tx" data-page="DNX TOOLS">
 <div class="wrap">
 
   <div class="tag-pill">DNX TOOLS · V1 · COMING SOON</div>
@@ -99,7 +247,7 @@ footer{max-width:900px;margin:0 auto;padding:40px 40px 60px;display:flex;justify
   <p style="font-family:'DM Mono',monospace;font-size:10px;color:#555;margin-bottom:24px;letter-spacing:0.1em;">INTERACTIVE · BUTTONS AND SLIDERS WORK</p>
   <p style="font-family:'DM Mono',monospace;font-size:10px;color:#666;margin-bottom:24px;letter-spacing:0.08em;border:1px solid #222;padding:12px;">Some panels won't work fully in this preview — certain features need AE connected to actually run. Toggles, sliders and controls are interactive tho.</p>
 
-  <div class="panels-grid">
+  <div class="panels-grid reveal">
 
     <!-- GRAPH -->
     <div class="panel-wrap">
@@ -321,7 +469,7 @@ footer{max-width:900px;margin:0 auto;padding:40px 40px 60px;display:flex;justify
 
   <div class="div"></div>
   <div class="section-header">What's included</div>
-  <div class="features-grid">
+  <div class="features-grid reveal">
     <div class="feature-item"><div class="feature-icon">〜</div><div class="feature-name">Graph Editor</div><div class="feature-desc">Custom curve editor with saved curve library. One-click time remap workflow with frame blend applied automatically.</div></div>
     <div class="feature-item"><div class="feature-icon">⬛</div><div class="feature-name">Auto Tools</div><div class="feature-desc">Auto null, adjustment layers, camera rigs, keyframe cloning, reversing, and audio-to-keyframe conversion.</div></div>
     <div class="feature-item"><div class="feature-icon">✦</div><div class="feature-name">Motion</div><div class="feature-desc">Anchor point grid, layer sequencing with offset control, AI to shapes, nesting, and a full label colour palette.</div></div>
@@ -336,6 +484,7 @@ footer{max-width:900px;margin:0 auto;padding:40px 40px 60px;display:flex;justify
   <p style="font-family:'DM Mono',monospace;font-size:11px;color:#444;letter-spacing:0.1em;">V1 RELEASING SOON — DNX TOOLS</p>
 
 </div>
+</div><!-- /pagewrap -->
 <footer>
   <span class="footer-name" style="color:#333;">DJHachet · DNX</span>
   <span class="footer-tag" style="color:#333;">© 2026 · UK</span>
@@ -461,5 +610,109 @@ if(svg) {
 }
 </script>
 
+<!-- SPOTIFY PLAYER -->
+<div id="spotify-player" style="position:fixed;bottom:24px;right:24px;z-index:200;width:300px;transition:all 0.3s ease;">
+  <iframe data-testid="embed-iframe" style="border-radius:4px;display:block;"
+    src="https://open.spotify.com/embed/playlist/3uc0P7OuQ5zC79CKwaa9sY?utm_source=generator&theme=0"
+    width="300" height="152" frameBorder="0" allowfullscreen=""
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+</div>
+<script>
+/* ===== SHARED ENGINE: menu + page transition + reveal ===== */
+(function(){
+  var body = document.body;
+
+  /* ---- slide-out menu ---- */
+  var toggle = document.querySelector('.nav-toggle');
+  function openMenu(){ body.classList.add('menu-open'); body.style.overflow='hidden'; }
+  function closeMenu(){ body.classList.remove('menu-open'); body.style.overflow=''; }
+  if(toggle){ toggle.addEventListener('click', function(){ body.classList.contains('menu-open')?closeMenu():openMenu(); }); }
+  document.querySelectorAll('[data-menu-close]').forEach(function(el){ el.addEventListener('click', closeMenu); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMenu(); });
+
+  /* ---- page transition engine ---- */
+  var PAGE_LABELS = {
+    'index':'DJHACHET', 'faq':'FAQ', 'about':'ABOUT', 'booking':'BOOKING',
+    'waitlist':'WAITLIST', 'work':'WORK', 'deposit':'DEPOSIT', 'tools':'DNX TOOLS',
+    'contact':'CONTACT'
+  };
+  function labelFor(href){
+    try{
+      var url = new URL(href, location.href);
+      if(url.origin !== location.origin) return '';
+      var file = url.pathname.split('/').pop().replace('.html','');
+      if(file==='' || file==='/') file='index';
+      return PAGE_LABELS[file] || '';
+    }catch(e){ return ''; }
+  }
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var wrap = document.getElementById('pagewrap');
+
+  var cover, label, bar;
+  function buildCover(){
+    cover = document.createElement('div'); cover.className='pt-cover';
+    label = document.createElement('div'); label.className='pt-label';
+    cover.appendChild(label);
+    bar = document.createElement('div'); bar.className='pt-bar';
+    document.body.appendChild(cover); document.body.appendChild(bar);
+  }
+
+  window.addEventListener('pageshow', function(){
+    if(reduce || !wrap) return;
+    if(!cover) buildCover();
+    label.textContent = wrap.getAttribute('data-page') || '';
+    cover.classList.add('in');
+    bar.style.opacity='1'; bar.style.width='100%';
+    requestAnimationFrame(function(){
+      setTimeout(function(){
+        cover.classList.remove('in'); cover.classList.add('out');
+        bar.style.opacity='0';
+        setTimeout(function(){ cover.classList.remove('out'); bar.style.width='0'; }, 520);
+      }, 260);
+    });
+  });
+
+  function navigate(href){
+    if(reduce){ location.href=href; return; }
+    if(!cover) buildCover();
+    label.textContent = labelFor(href) || '';
+    bar.style.opacity='1'; bar.style.width='0';
+    requestAnimationFrame(function(){ bar.style.transition='width .45s ease'; bar.style.width='50%'; });
+    cover.classList.remove('out'); cover.classList.add('in');
+    setTimeout(function(){ location.href=href; }, 500);
+  }
+
+  if(wrap && !reduce){
+    document.addEventListener('click', function(e){
+      var a = e.target.closest('a');
+      if(!a) return;
+      var href = a.getAttribute('href');
+      if(!href) return;
+      if(a.target==='_blank') return;
+      if(href.startsWith('#')) return;
+      if(a.hasAttribute('data-no-tx')) return;
+      var url;
+      try{ url = new URL(href, location.href); }catch(err){ return; }
+      if(url.origin!==location.origin) return;
+      if(url.pathname===location.pathname){ return; } // same page (anchor or self) — let browser handle
+      e.preventDefault();
+      closeMenu();
+      navigate(href);
+    });
+  }
+
+  /* ---- scroll reveal ---- */
+  var revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window && revealEls.length){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('on'); io.unobserve(en.target); } });
+    }, { threshold:0.12, rootMargin:'0px 0px -8% 0px' });
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('on'); });
+  }
+})();
+
+</script>
 </body>
 </html>
