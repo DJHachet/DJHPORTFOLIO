@@ -7,6 +7,9 @@
 <title>Contact — DJHachet</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
+/* Anti-flash: keep the cover visible with no transition until JS is ready to retract. */
+html.pt-arriving .pt-cover{transform:translateY(0) !important;visibility:visible !important;transition:none !important;}
+html.pt-arriving .pt-cover .pt-label{opacity:1 !important;transform:translateY(0) !important;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
   --bg:#090909;--white:#f0f0f0;--mid:#666;--dim:#3a3a3a;--dimmer:#1e1e1e;--ghost:#141414;--div:#161616;
@@ -138,28 +141,50 @@ body.menu-open .menu-links li:nth-child(11) .menu-link{transition-delay:.74s;}
 .menu-foot a{font-family:'DM Sans',sans-serif;font-size:14px;color:#888;text-decoration:none;transition:color .2s;}
 .menu-foot a:hover{color:var(--white);}
 
-/* ===== page transition ===== */
+/* ===== page transition =====
+   State model (no scaleY paint-gap):
+   - default: cover hidden (not painted over page)
+   - .shown: cover instantly fills screen, NO transition (used by head-script on arrival,
+     and as the starting point of an outgoing nav) → page never flashes before it
+   - .expanding: animate the cover growing up from the bottom (leaving current page)
+   - .retract: animate the cover sliding up off the top (revealing new page) */
 .pt-cover{
   position:fixed;inset:0;z-index:900;
   background:#0b0b0b;
-  transform:scaleY(0);transform-origin:bottom;
-  pointer-events:none;
   display:flex;align-items:center;justify-content:center;
+  transform:translateY(100%);           /* parked just below the viewport */
+  opacity:1;visibility:hidden;
+  pointer-events:none;
+  will-change:transform;
 }
-.pt-cover.in{transform:scaleY(1);transform-origin:bottom;transition:transform .5s cubic-bezier(.65,0,.35,1);}
-.pt-cover.out{transform:scaleY(0);transform-origin:top;transition:transform .5s cubic-bezier(.65,0,.35,1);}
+/* instantly covering, no animation */
+.pt-cover.shown{transform:translateY(0);visibility:visible;transition:none;}
+/* leaving: slide up into place from the bottom, animated */
+.pt-cover.expanding{
+  transform:translateY(0);visibility:visible;
+  transition:transform .48s cubic-bezier(.65,0,.35,1);
+}
+.pt-cover.expanding.__start{transform:translateY(100%);}
+/* arriving: slide up and off the top, animated */
+.pt-cover.retract{
+  transform:translateY(-100%);
+  transition:transform .6s cubic-bezier(.65,0,.35,1);
+}
 .pt-label{
   font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,10vw,104px);
   letter-spacing:0.06em;color:#f0f0f0;
   opacity:0;transform:translateY(20px);
 }
-.pt-cover.in .pt-label{opacity:1;transform:translateY(0);transition:opacity .4s .12s ease,transform .4s .12s cubic-bezier(.2,.7,.2,1);}
+.pt-cover.shown .pt-label,
+.pt-cover.expanding .pt-label{opacity:1;transform:translateY(0);transition:opacity .4s .06s ease,transform .4s .06s cubic-bezier(.2,.7,.2,1);}
+.pt-cover.retract .pt-label{opacity:0;transform:translateY(-14px);transition:opacity .3s ease,transform .3s ease;}
 .pt-bar{
   position:fixed;left:0;top:0;height:2px;width:0;background:#e8c84a;
   z-index:901;opacity:0;
 }
 @media(prefers-reduced-motion:reduce){
-  .pt-cover,.pt-cover.in,.pt-cover.out,.pt-label,.menu-link{transition:none !important;}
+  .pt-cover,.pt-cover.shown,.pt-cover.expanding,.pt-cover.retract,.pt-label,.menu-link{transition:none !important;}
+  .pt-cover{display:none !important;}
 }
 
 /* ===== scroll reveal ===== */
@@ -176,8 +201,24 @@ body.menu-open .menu-links li:nth-child(11) .menu-link{transition-delay:.74s;}
 @media(max-width:540px){.contact-grid{grid-template-columns:1fr;}}
 
 </style>
+<script>
+/* Anti-flash guard (runs before <body> paints): if we arrived via an internal page
+   transition, mark the document so the cover paints fully OVER the page immediately —
+   the new page is never seen before the cover slides away. */
+(function(){
+  try{
+    if(sessionStorage.getItem('pt-nav')==='1' &&
+       !(window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches)){
+      document.documentElement.classList.add('pt-arriving');
+    }
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
+<!-- page-transition cover (pre-rendered so it can paint before the page) -->
+<div id="pt-cover" class="pt-cover"><div id="pt-label" class="pt-label" data-label="CONTACT"></div></div>
+<div id="pt-bar" class="pt-bar"></div>
 <!-- SLIDE-OUT MENU -->
 <div class="menu-backdrop" data-menu-close></div>
 <aside class="menu-panel" aria-label="Main menu">
@@ -272,6 +313,7 @@ body.menu-open .menu-links li:nth-child(11) .menu-link{transition-delay:.74s;}
 /* ===== SHARED ENGINE: menu + page transition + reveal ===== */
 (function(){
   var body = document.body;
+  var docEl = document.documentElement;
 
   /* ---- slide-out menu ---- */
   var toggle = document.querySelector('.nav-toggle');
@@ -299,38 +341,73 @@ body.menu-open .menu-links li:nth-child(11) .menu-link{transition-delay:.74s;}
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   var wrap = document.getElementById('pagewrap');
 
-  var cover, label, bar;
-  function buildCover(){
-    cover = document.createElement('div'); cover.className='pt-cover';
-    label = document.createElement('div'); label.className='pt-label';
-    cover.appendChild(label);
-    bar = document.createElement('div'); bar.className='pt-bar';
-    document.body.appendChild(cover); document.body.appendChild(bar);
+  /* Cover + bar are already in the DOM (rendered in the HTML ahead of this script).
+     A tiny head-script has ALREADY shown the cover if we arrived via a transition,
+     so the page never flashes before it. Here we wire up retract + outgoing. */
+  var cover = document.getElementById('pt-cover');
+  var label = document.getElementById('pt-label');
+  var bar   = document.getElementById('pt-bar');
+
+  function retract(){
+    if(reduce || !cover) return;
+    bar.style.transition='none'; bar.style.opacity='1'; bar.style.width='100%';
+    void cover.offsetWidth;
+    setTimeout(function(){
+      docEl.classList.remove('pt-arriving');
+      cover.classList.remove('expanding');
+      cover.classList.add('shown');           // ensure it's holding at full cover
+      void cover.offsetWidth;
+      cover.classList.add('retract');
+      bar.style.transition='opacity .4s ease'; bar.style.opacity='0';
+      setTimeout(function(){
+        cover.classList.remove('shown','retract','expanding');
+        bar.style.width='0';
+      }, 660);
+    }, 300);
   }
 
-  window.addEventListener('pageshow', function(){
-    if(reduce || !wrap) return;
-    if(!cover) buildCover();
-    label.textContent = wrap.getAttribute('data-page') || '';
-    cover.classList.add('in');
-    bar.style.opacity='1'; bar.style.width='100%';
-    requestAnimationFrame(function(){
-      setTimeout(function(){
-        cover.classList.remove('in'); cover.classList.add('out');
-        bar.style.opacity='0';
-        setTimeout(function(){ cover.classList.remove('out'); bar.style.width='0'; }, 520);
-      }, 260);
-    });
+  function playIncoming(){
+    if(reduce || !cover) return;
+    // We arrived via a transition iff the head-script flagged it.
+    if(!docEl.classList.contains('pt-arriving')) return;   // fresh load / refresh → nothing to do
+    try{ sessionStorage.removeItem('pt-nav'); }catch(e){}
+    // fill the label from the pre-rendered data-label and hold the cover fully shown
+    if(label && !label.textContent){ label.textContent = label.getAttribute('data-label') || (wrap ? wrap.getAttribute('data-page') : '') || ''; }
+    cover.classList.add('shown');
+    void cover.offsetWidth;
+    retract();
+  }
+
+  playIncoming();
+  // bfcache restore (back/forward): if we navigated out via a transition, replay the reveal
+  window.addEventListener('pageshow', function(e){
+    if(e.persisted && cover && !reduce){
+      try{
+        if(sessionStorage.getItem('pt-nav')==='1'){
+          sessionStorage.removeItem('pt-nav');
+          if(label){ label.textContent = label.getAttribute('data-label') || (wrap ? wrap.getAttribute('data-page') : '') || ''; }
+          cover.classList.remove('retract','expanding');
+          cover.classList.add('shown');
+          void cover.offsetWidth;
+          retract();
+        }
+      }catch(err){}
+    }
   });
 
   function navigate(href){
     if(reduce){ location.href=href; return; }
-    if(!cover) buildCover();
+    if(!cover){ location.href=href; return; }
     label.textContent = labelFor(href) || '';
-    bar.style.opacity='1'; bar.style.width='0';
-    requestAnimationFrame(function(){ bar.style.transition='width .45s ease'; bar.style.width='50%'; });
-    cover.classList.remove('out'); cover.classList.add('in');
-    setTimeout(function(){ location.href=href; }, 500);
+    try{ sessionStorage.setItem('pt-nav','1'); }catch(e){}
+    bar.style.transition='none'; bar.style.opacity='1'; bar.style.width='0';
+    void bar.offsetWidth;
+    requestAnimationFrame(function(){ bar.style.transition='width .5s ease'; bar.style.width='55%'; });
+    cover.classList.remove('retract','shown');
+    // base state already parks the cover below the viewport; force reflow then animate up
+    void cover.offsetWidth;
+    cover.classList.add('expanding');
+    setTimeout(function(){ location.href=href; }, 480);
   }
 
   if(wrap && !reduce){
@@ -345,7 +422,7 @@ body.menu-open .menu-links li:nth-child(11) .menu-link{transition-delay:.74s;}
       var url;
       try{ url = new URL(href, location.href); }catch(err){ return; }
       if(url.origin!==location.origin) return;
-      if(url.pathname===location.pathname){ return; } // same page (anchor or self) — let browser handle
+      if(url.pathname===location.pathname) return;
       e.preventDefault();
       closeMenu();
       navigate(href);
